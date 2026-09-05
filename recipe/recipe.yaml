@@ -1,0 +1,50 @@
+schema_version: 1
+
+context:
+  version: "2.0.3"
+
+package:
+  name: orderedset
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/o/orderedset/orderedset-${{ version }}.tar.gz
+  sha256: b2f5ccfb5a86e7b3b3ddf18b29779cc18b24653abf9d6da4bebecf33780a6e29
+
+build:
+  number: 11
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - cython
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+  host:
+    - python
+    - setuptools
+    - cython
+    - pip
+  run:
+    - python
+
+tests:
+  - python:
+      imports:
+        - orderedset
+      pip_check: true
+
+about:
+  summary: An Ordered Set implementation in Cython.
+  license: BSD-3-Clause-LBNL
+  license_file: LICENSE
+  homepage: https://github.com/simonpercivall/orderedset
+
+extra:
+  recipe-maintainers:
+    - ocefpaf
+    - anthchirp
